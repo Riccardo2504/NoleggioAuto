@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32002.261
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoleggioAuto.Business", "..\NoleggioAuto.Business\NoleggioAuto.Business.csproj", "{680635AC-2632-4C23-97BF-59968ED87EED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoleggioAuto.Web", "..\StageApplication.Web\NoleggioAuto.Web.csproj", "{BA3B4304-4CAD-4D60-B269-66B02C726122}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{680635AC-2632-4C23-97BF-59968ED87EED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{680635AC-2632-4C23-97BF-59968ED87EED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{680635AC-2632-4C23-97BF-59968ED87EED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{680635AC-2632-4C23-97BF-59968ED87EED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA3B4304-4CAD-4D60-B269-66B02C726122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA3B4304-4CAD-4D60-B269-66B02C726122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA3B4304-4CAD-4D60-B269-66B02C726122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA3B4304-4CAD-4D60-B269-66B02C726122}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3380080C-ECFB-4369-BCEB-9B4984E2539D}
+	EndGlobalSection
+EndGlobal

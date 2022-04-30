@@ -38,13 +38,19 @@
             </div>
         <br />
 
+    <div>
 
+    </div>
     <div class="panel-body">
         <label for="txtDettaglioTarga">Targa </label>
         <asp:TextBox runat="server" ID="txtDettaglioTarga" CssClass="form-control" Text="" ReadOnly="false">
 
         </asp:TextBox>
     </div>
+    <div>
+
+    </div>
+    
     <div class="panel-body">
         <label for="txtDettaglioNote">Note </label>
         <asp:TextBox runat="server" ID="txtDettaglioNote" CssClass="form-control" Text="" ReadOnly="false">

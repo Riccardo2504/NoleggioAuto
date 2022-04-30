@@ -8,9 +8,7 @@
                 <HeaderStyle HorizontalAlign="Center" />
             </asp:BoundField>--%>
 
-            <asp:BoundField DataField="Id" HeaderText="Id" >
-                <HeaderStyle HorizontalAlign="Center" />
-            </asp:BoundField>
+            
             <asp:BoundField DataField="Descrizione" HeaderText="Marca" >
                 <HeaderStyle HorizontalAlign="Center" />
             </asp:BoundField>

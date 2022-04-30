@@ -56,9 +56,7 @@
             <%--<asp:BoundField DataField="Id" HeaderText="Id" Visible="False" meta:resourcekey="BoundFieldResource1">
                 <HeaderStyle HorizontalAlign="Center" />
             </asp:BoundField>--%>
-            <asp:BoundField DataField="Id" HeaderText="Id" >
-                <HeaderStyle HorizontalAlign="Center" />
-            </asp:BoundField>
+            
             <asp:BoundField DataField="Descrizione" HeaderText="Marca" >
                 <HeaderStyle HorizontalAlign="Center" />
             </asp:BoundField>

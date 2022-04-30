@@ -48,7 +48,7 @@
         </formview>
             </div>
 
-            <br />
+            </div>
 
             <div class="form-group">
                 <label for="txtTarga">Targa</label>
@@ -56,7 +56,7 @@
                 </asp:TextBox>
             </div>
 
-            <br />
+            </div>
 
             <div class="form-group">
                 <label for="txtNote">Note</label>

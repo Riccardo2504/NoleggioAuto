@@ -9,6 +9,6 @@ namespace NoleggioAuto.Business.Models
     public class AlimentazioneModel
     {
         public int Id { get; set; }
-        public string Descrizione { get; set; }
+        public string DescrizioneAlimentazione { get; set; }
     }
 }

@@ -17,6 +17,8 @@ namespace NoleggioAuto.Business.Models
         public string Note { get; set; }
         public DateTime? DataInserimento { get; set; }
         public DateTime? DataModifica { get; set; }
+        public string Descrizione { get; set; }
+        public string DescrizioneAlimentazione { get; set; }
     }
 }
 

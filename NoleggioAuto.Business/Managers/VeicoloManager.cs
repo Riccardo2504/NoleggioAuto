@@ -19,7 +19,10 @@ namespace NoleggioAuto.Business.Managers
             var veicoloList = new List<VeicoloModel>();
             try
             {
-                string query = "SELECT Id, IdMarca, Modello, IdAlimentazione, DataImmatricolazione, Targa, Note FROM VeicoliRR;";
+                string query = @"SELECT VeicoliRR.Id ,MarcaRR.Id, Modello, idAlimentazione, DataImmatricolazione, Targa, Note, MarcaRR.Descrizione, AlimentazioneRR.DescrizioneAlimentazione
+                                FROM VeicoliRR
+                                INNER JOIN MarcaRR ON VeicoliRR.IdMarca = MarcaRR.Id
+								INNER JOIN AlimentazioneRR ON VeicoliRR.IdAlimentazione = AlimentazioneRR.Id;";
                 using (var command = new SqlCommand(query))
                 {
                     using (var connection = new SqlConnection(ConnectionString))
@@ -47,6 +50,8 @@ namespace NoleggioAuto.Business.Managers
                                     veicolo.DataImmatricolazione = null;
                                 veicolo.Targa = reader[5].ToString();
                                 veicolo.Note = reader[6].ToString();
+                                veicolo.Descrizione = reader[7].ToString();
+                                veicolo.DescrizioneAlimentazione = reader[8].ToString();
                                 veicoloList.Add(veicolo);
                             }
                         }
@@ -97,41 +102,42 @@ namespace NoleggioAuto.Business.Managers
         {
             var veicoloList = new List<VeicoloModel>();
             var sb = new StringBuilder();
-            sb.AppendLine("SELECT");
-            sb.AppendLine("\t [Id]");
-            sb.AppendLine("\t,[IdMarca]");
-            sb.AppendLine("\t,[Modello]");
-            sb.AppendLine("\t,[IdAlimentazione]");
-            sb.AppendLine("\t,[DataImmatricolazione]");
-            sb.AppendLine("\t,[Targa]");
-            sb.AppendLine("\t,[Note]");
-            sb.AppendLine("\t,[DataInserimento]");
-            sb.AppendLine("\t,[DataModifica]");
-            sb.AppendLine("FROM [dbo].[VeicoliRR]");
+            sb.AppendLine(@"SELECT VeicoliRR.Id, MarcaRR.Id AS IdMarca, Modello, idAlimentazione, DataImmatricolazione, Targa, Note, MarcaRR.Descrizione, AlimentazioneRR.DescrizioneAlimentazione, DataInserimento, DataModifica
+                                FROM VeicoliRR
+                                INNER JOIN MarcaRR ON VeicoliRR.IdMarca = MarcaRR.Id
+                                INNER JOIN AlimentazioneRR ON VeicoliRR.IdAlimentazione = AlimentazioneRR.Id");
+           
             sb.AppendLine("WHERE 1=1");
             try
             {
-                if (ricercaVeicolo.IdMarca != 0)
+                if (ricercaVeicolo.IdMarca > 0)
                 {
-                    sb.AppendLine("AND IdMarca=@IdMarca");
+                    sb.AppendLine("AND VeicoliRR.IdMarca=@IdMarca");
                 }
                 if (!string.IsNullOrEmpty(ricercaVeicolo.Modello))
                 {
-                    sb.AppendLine("AND Modello=@Modello");
+                    sb.AppendLine("AND VeicoliRR.Modello=@Modello");
                 }
-                if (ricercaVeicolo.IdAlimentazione != 0)
+                if (ricercaVeicolo.IdAlimentazione > 0)
                 {
-                    sb.AppendLine("AND IdAlimentazione=@IdAlimentazione");
+                    sb.AppendLine("AND VeicoliRR.IdAlimentazione=@IdAlimentazione");
                 }
                 if (!string.IsNullOrEmpty(ricercaVeicolo.Targa))
                 {
-                    sb.AppendLine("AND Targa=@Targa");
+                    sb.AppendLine("AND VeicoliRR.Targa=@Targa");
                 }
                 if (!string.IsNullOrEmpty(ricercaVeicolo.Note))
                 {
-                    sb.AppendLine("AND Note=@Note");
+                    sb.AppendLine("AND VeicoliRR.Note=@Note");
                 }
-
+                if(ricercaVeicolo.DataImmatricolazioneDa != DateTime.MinValue)
+                {
+                    sb.AppendLine("AND VeicoliRR.DataImmatricolazione>@DataImmatricolazioneDa");
+                }
+                if (ricercaVeicolo.DataImmatricolazioneA != DateTime.MinValue)
+                {
+                    sb.AppendLine("AND VeicoliRR.DataImmatricolazione<@DataImmatricolazioneA");
+                }
                 using (var cmd = new SqlCommand(sb.ToString()))
                 {
                     if (ricercaVeicolo.IdMarca != 0)
@@ -154,6 +160,14 @@ namespace NoleggioAuto.Business.Managers
                     {
                         cmd.Parameters.AddWithValue("@Note", ricercaVeicolo.Note);
                     }
+                    if (ricercaVeicolo.DataImmatricolazioneDa != DateTime.MinValue)
+                    {
+                        cmd.Parameters.AddWithValue("@DataImmatricolazioneDa", ricercaVeicolo.DataImmatricolazioneDa);
+                    }
+                    if (ricercaVeicolo.DataImmatricolazioneA != DateTime.MinValue)
+                    {
+                        cmd.Parameters.AddWithValue("@DataImmatricolazioneA", ricercaVeicolo.DataImmatricolazioneA);
+                    }
                     var dt = new DataTable();
                     using (var conn = new SqlConnection(ConnectionString))
                     {
@@ -164,7 +178,7 @@ namespace NoleggioAuto.Business.Managers
                             adp.SelectCommand.Connection = conn;
                             adp.Fill(dt);
 
-                            if (dt == null || dt.Rows.Count <= 0) return null;
+                            if (dt == null || dt.Rows.Count <= 0) return veicoloList;
                             for (int i = 0; i < dt.Rows.Count; i++)
                             {
                                 var row = dt.Rows[i];
@@ -178,7 +192,10 @@ namespace NoleggioAuto.Business.Managers
                                     Targa = row.Field<string>("Targa"),
                                     Note = row.Field<string>("Note"),
                                     DataInserimento = row.Field<DateTime?>("DataInserimento"),
-                                    DataModifica = row.Field<DateTime?>("DataModifica")
+                                    DataModifica = row.Field<DateTime?>("DataModifica"),
+                                    Descrizione= row.Field<string>("Descrizione"),
+                                    DescrizioneAlimentazione= row.Field<string>("DescrizioneAlimentazione")
+
                                 };
                                 veicoloList.Add(veicolo);
                             }
@@ -285,15 +302,22 @@ namespace NoleggioAuto.Business.Managers
             bool modifica = false;
             try
             {
-                string query = @"UPDATE [dbo].[VeicoliRR] SET [IdMarca] = @IdMarca,[Modello] = @Modello,[IdAlimentazione] = @IdAlimentazione,[DataImmatricolazione] = @DataImmatricolazione,[Targa] = @Targa,[Note] = @Note,[DataModifica] = @DataModifica WHERE id = @id";
+                string query = @"UPDATE [dbo].[VeicoliRR] 
+                                SET [IdMarca] = @IdMarca,
+                                [Modello] = @Modello,
+                                [IdAlimentazione] = @IdAlimentazione,
+                                [DataImmatricolazione] = @DataImmatricolazione,
+                                [Targa] = @Targa,[Note] = @Note,
+                                [DataModifica] = @DataModifica 
+                                WHERE id = @id";
                 var connection = new SqlConnection(ConnectionString);
                 connection.Open();
 
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@id", veicoloModel.Id);
-                    command.Parameters.AddWithValue("@Nome", veicoloModel.IdMarca);
-                    command.Parameters.AddWithValue("@Cognome", veicoloModel.IdAlimentazione);
+                    command.Parameters.AddWithValue("@IdMarca", veicoloModel.IdMarca);
+                    command.Parameters.AddWithValue("@IdAlimentazione", veicoloModel.IdAlimentazione);
                     if (string.IsNullOrEmpty(veicoloModel.Modello))
                     {
                         command.Parameters.AddWithValue(@"Modello", DBNull.Value);
@@ -343,6 +367,7 @@ namespace NoleggioAuto.Business.Managers
         public List<MarcaModel> PopolaMarche()
         {
             List<MarcaModel> veicolo1 = new List<MarcaModel>();
+            veicolo1.Add(new MarcaModel() { Descrizione = "---", Id = -1 }); 
             try
             {
                 string Popola = "SELECT [descrizione],[Id] FROM[dbo].[MarcaRR]";
@@ -375,9 +400,10 @@ namespace NoleggioAuto.Business.Managers
         public List<AlimentazioneModel> PopolaAlimentazione()
         {
             List<AlimentazioneModel> veicolo1 = new List<AlimentazioneModel>();
+            veicolo1.Add(new AlimentazioneModel() { DescrizioneAlimentazione = "---", Id = -1 });
             try
             {
-                string Popola = "SELECT [descrizione],[Id] FROM[dbo].[AlimentazioneRR]";
+                string Popola = "SELECT [DescrizioneAlimentazione],[Id] FROM[dbo].[AlimentazioneRR]";
                 using (var command = new SqlCommand(Popola))
                 {
                     using (var connection = new SqlConnection(ConnectionString))
@@ -389,7 +415,7 @@ namespace NoleggioAuto.Business.Managers
                         while (reader.Read())
                         {
                             AlimentazioneModel veicolo = new AlimentazioneModel();
-                            veicolo.Descrizione = reader[0].ToString();
+                            veicolo.DescrizioneAlimentazione = reader[0].ToString();
                             veicolo.Id = reader.GetInt32(1);
                             veicolo1.Add(veicolo);
                         }
@@ -410,7 +436,9 @@ namespace NoleggioAuto.Business.Managers
             public int IdMarca { get; set; }
             public string Modello { get; set; }
             public int IdAlimentazione { get; set; }
-            public DateTime? DataImmatricolazione { get; set; }
+            public DateTime? DataImmatricolazioneDa { get; set; }
+            public DateTime? DataImmatricolazioneA { get; set; }
+            
             public string Targa { get; set; }
             public string Note { get; set; }
             public DateTime? DataInserimento { get; set; }
